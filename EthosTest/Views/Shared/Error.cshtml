@@ -1,0 +1,36 @@
+﻿@model System.Web.Mvc.HandleErrorInfo
+
+@{
+    ViewBag.Title = "Error";
+}
+
+<hgroup class="title">
+    <h1 class="error">Error.</h1>
+    <h2 class="error">An error occurred while processing your request.</h2>
+</hgroup>
+<div>
+
+</div>
+<div>
+    <b>Controller:</b> @Model.ControllerName
+</div>
+<div>
+    <b>Action:</b> @Model.ActionName
+</div>
+<div>
+    <b>Message:</b> 
+    <ul>
+        @* Display all exceptions messages.*@
+
+        @{
+            var exception = Model.Exception;
+
+            while (exception != null)
+            {
+                <li>@exception.Message</li>           
+
+                exception = exception.InnerException;
+            }
+        }
+    </ul>  
+</div>

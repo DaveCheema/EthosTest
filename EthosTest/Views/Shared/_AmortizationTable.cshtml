@@ -1,0 +1,43 @@
+﻿@model IEnumerable<EthosTest.Models.MonthlyPaymentDetail>
+
+<table class="table">
+    <tr>        
+        <th>
+            @Html.DisplayNameFor(model => model.DueDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PaymentAmount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.InterestAmount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PrincipleAmount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RemainingBalance)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>        
+        <td>
+            @Html.DisplayFor(modelItem => item.DueDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PaymentAmount)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.InterestAmount)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PrincipleAmount)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RemainingBalance)
+        </td>        
+    </tr>
+}
+
+</table>

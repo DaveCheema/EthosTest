@@ -1,0 +1,17 @@
+﻿@using EthosTest.Models;
+@model Tuple<AmortizationModel, List<MonthlyPaymentDetail>>
+
+@{
+    ViewBag.Title = "Amortizer";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Loan Amortization</h2>
+@* Render amortization summary.*@
+@{Html.RenderPartial("_AmortizerSummary", Model.Item1);}
+
+@* Draw a separator between the summary and the detail, purely for aesthetic purpose.*@
+<hr style="background:#737373; border:0; height:2px" />
+
+@* Render amortization detail.*@
+@{Html.RenderPartial("_AmortizationTable", Model.Item2);}
