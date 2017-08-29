@@ -9,13 +9,37 @@ using System.Security.Cryptography;
 namespace EthosTest.Engines
 {
     // HashingEngine is used to hash a salted phrase using SHA384.
-    // At this point in point, it is only uses SHA384 hash.
+    // If no HashAlgorithm provided, it will default to SHA384Managed.
     public class HashingEngine
     {
+        private static volatile HashingEngine instance;
+        private static object syncRoot = new Object();
+
+        private HashingEngine() { }
+
+        // Create a singleton instance.
+        public static HashingEngine Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    lock (syncRoot)
+                    {
+                        if (instance == null)
+                            instance = new HashingEngine();
+                    }
+                }
+
+                return instance;
+            }
+        }
+
         // HashWithSalt is the heart of Hashing engine.
         // This method is called asynchronously to avoid blocking and provide improved performance.
-        public static Task<string> HashWithSalt(  string phraseToHash,                                         
-                                            byte[] salt = null)
+        public Task<string> HashWithSalt(  string phraseToHash
+                                        ,  byte[] salt = null
+                                        ,  HashAlgorithm hashAlgorithm = null)
         {
             try
             {
@@ -39,6 +63,12 @@ namespace EthosTest.Engines
                     rng.GetNonZeroBytes(salt);
                 }
 
+                // If no hashAlgorithm provided, default it to SHA384Managed.
+                if (hashAlgorithm == null)
+                {
+                    hashAlgorithm = new SHA384Managed();
+                }
+
                 // Convert plain text into a byte array.
                 byte[] strTextBytes = Encoding.UTF8.GetBytes(phraseToHash);
 
@@ -50,10 +80,8 @@ namespace EthosTest.Engines
                 Array.Copy(strTextBytes, strWithsalt, strTextBytes.Length);
                 Array.Copy(salt, 0, strWithsalt, strTextBytes.Length, salt.Length);
 
-                HashAlgorithm hash = new SHA384Managed();
-
                 // Compute hash value of str with appended salt.
-                byte[] hashBytes = hash.ComputeHash(strWithsalt);
+                byte[] hashBytes = hashAlgorithm.ComputeHash(strWithsalt);
 
                 // Create array which will hold hash and original salt bytes.
                 byte[] hashWithsalt = new byte[hashBytes.Length +

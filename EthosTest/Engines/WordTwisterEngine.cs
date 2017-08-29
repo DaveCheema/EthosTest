@@ -40,7 +40,7 @@ namespace EthosTest.Engines
         {
             return
                 await
-                HashingEngine.HashWithSalt(phrase);
+                HashingEngine.Instance.HashWithSalt(phrase);
         }
     }
 }
