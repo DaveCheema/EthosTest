@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using EthosTest.Models;
-using EthosTest.Engines;
+using EthosTest.Workers;
 
 namespace EthosTest.Controllers
 {
@@ -23,7 +23,10 @@ namespace EthosTest.Controllers
         {
             if (ModelState.IsValid)
             {
-                twister.Text = TwistIt(twister);
+                twister.Text = 
+                    WordTwisterProcessor.Instance
+                    .TwistIt(twister).Result;
+
                 ModelState.Clear();
             }
 
@@ -31,30 +34,6 @@ namespace EthosTest.Controllers
 
         }
 
-        // Twist user entered phrase based on user selected option.
-        private static string TwistIt(WordTwisterModel twister)
-        {
-            string twistedPhrase = null;
-
-            // Produce result based on Twist Action selecteed.
-            switch (twister.TwistAction)
-            {
-                case Twist.ReverseWordOrder:
-                    twistedPhrase = WordTwisterEngine.ReverseWordOrder(twister.Text);
-                    break;
-                case Twist.ReverseCharacters:
-                    twistedPhrase = WordTwisterEngine.ReverseCharacters(twister.Text);
-                    break;
-                case Twist.SortWordsAlphabetically:
-                    twistedPhrase = WordTwisterEngine.SortWordsAlphabetically(twister.Text);
-                    break;
-                case Twist.EncryptInput:
-                    // .Result is used to extract the result.
-                    twistedPhrase = WordTwisterEngine.EncryptInput(twister.Text).Result;    
-                    break;
-            }
-
-            return twistedPhrase;
-        }
+       
     }
 }

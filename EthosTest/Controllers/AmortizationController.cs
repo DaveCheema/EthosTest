@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using EthosTest.Models;
-using EthosTest.Engines;
+using EthosTest.Workers;
 
 namespace EthosTest.Controllers
 {
@@ -35,7 +35,8 @@ namespace EthosTest.Controllers
             if (ModelState.IsValid)
             {                
                 amortizationModel =
-                    GetPaymentModel(  amortizationModel.LoanAMount
+                    AmortizationProcessor.Instance                    
+                    .GetPaymentModel(  amortizationModel.LoanAMount
                                     , amortizationModel.LoanTermInMonths
                                     , amortizationModel.InterestRate)
                     .Result;
@@ -50,18 +51,6 @@ namespace EthosTest.Controllers
             return View(tuple);
 
         }
-
-        // GetPaymentModel is called asynchronously to avoid any blocking for improved performance. 
-        private async static Task<AmortizationModel> GetPaymentModel( double loanAMount
-                                                                    , short loanTermInMonths
-                                                                    , double interestRate)
-        {
-            // Generate amortization model asynchronously.
-            return
-                 await 
-                 AmortizationEngine.GeneratePaymentModel( loanAMount
-                                                        , loanTermInMonths
-                                                        , interestRate);
-        }
+        
     }
 }
